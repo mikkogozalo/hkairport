@@ -1,0 +1,11 @@
+$font-family-sans-serif:      Oswald !default;
+$font-family-monospace:       SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+$font-weight-light:           400 !default;
+$font-weight-normal:          400 !default;
+$font-weight-bold:            700 !default;
+$headings-font-weight:        400 !default;
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+.bg-hk {
+  background-color: #991a91 !important;
+}
