@@ -17,7 +17,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        _date = parse('2018-04-08').astimezone(pytz.timezone('Asia/Manila'))
+        _date = parse('2018-04-20').astimezone(pytz.timezone('Asia/Manila'))
 
         while _date.date() != timezone.now().astimezone(pytz.timezone('Asia/Manila')).date():
             url = 'https://www.hongkongairport.com/flightinfo-rest/rest/flights?span=1&date={}&lang=en&cargo={}&arrival={}'
