@@ -455,7 +455,7 @@ class Departure(models.Model):
             departure__schedule__date=date,
             flight_number__airline__icao=json['flight'][0]['airline'],
             flight_number__number=json['flight'][0]['no'].split(' ')[-1]
-        ).distinct().first()
+        ).select_related('departure__latest_status', 'departure__terminal', 'departure__gate').distinct().first()
         if departure_flight_number:
             departure = departure_flight_number.departure
             if departure.latest_status and departure.latest_status.status_code == 'DA':
@@ -464,10 +464,10 @@ class Departure(models.Model):
             departure = Departure()
             created = True
         terminal = json.get('terminal')
-        if terminal:
+        if departure.terminal is None and terminal:
             departure.terminal = Terminal.get_terminal(terminal)
         gate = json.get('gate')
-        if gate:
+        if departure.gate is None and gate:
             departure.gate = Gate.get_gate(gate)
         departure.schedule = timezone.make_aware(parse(date + ' ' + json.get('time')))
         departure.is_cargo = is_cargo
@@ -574,7 +574,7 @@ class Arrival(models.Model):
             arrival__schedule__date=date,
             flight_number__airline__icao=json['flight'][0]['airline'],
             flight_number__number=json['flight'][0]['no'].split(' ')[-1]
-        ).distinct().first()
+        ).select_related('arrival__latest_status', 'arrival__hall', 'arrival__stand', 'arrival__baggage_reclaim').distinct().first()
         if arrival_flight_number:
             arrival = arrival_flight_number.arrival
             if arrival.latest_status and arrival.latest_status.status_code == 'ON':
@@ -583,13 +583,13 @@ class Arrival(models.Model):
             arrival = Arrival()
             created = True
         stand = json.get('stand')
-        if stand:
+        if arrival.stand is None and stand:
             arrival.stand = Stand.get_stand(stand)
         hall = json.get('hall')
-        if hall:
+        if arrival.hall is None and hall:
             arrival.hall = Hall.get_hall(hall)
         baggage_reclaim = json.get('baggage')
-        if baggage_reclaim:
+        if arrival.baggage_reclaim is None and baggage_reclaim:
             arrival.baggage_reclaim = BaggageReclaim.get_baggage_reclaim(baggage_reclaim)
         arrival.schedule = timezone.make_aware(parse(date + ' ' + json.get('time')))
         arrival.is_cargo = is_cargo
