@@ -41,10 +41,14 @@ class FrLog(models.Model):
         if log:
             return log, False
 
-        last_log = cls.objects.filter(registration=feed['registration']).order_by('-timestamp').first()
+        last_log: FrLog = cls.objects.filter(registration=feed['registration']).order_by('-timestamp').first()
         feed['timestamp'] = datetime.fromtimestamp(feed['timestamp'], pytz.timezone('Asia/Manila'))
         if last_log:
-            if (feed['timestamp'] - last_log.timestamp).total_seconds() <= 30 and feed['altitude'] > 24000:
+            if (
+                (feed['timestamp'] - last_log.timestamp).total_seconds() <= 30 and
+                abs(last_log.vertical_speed) == 0 and abs(feed['vertical_speed'] == 0) and  # Cruising
+                feed['altitude'] > 1000  # Above 500ft
+            ):
                 return last_log, False
 
         log = FrLog()
