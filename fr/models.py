@@ -60,6 +60,8 @@ class FrLog(models.Model):
 
     @classmethod
     def hash_feed(cls, feed):
+        feed = feed.copy()
+        del feed['timestamp']
         keys = sorted(feed.keys())
         concatenate = ''
         for _ in keys:
