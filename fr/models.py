@@ -44,6 +44,7 @@ class FrLog(models.Model):
         feed['timestamp'] = datetime.fromtimestamp(feed['timestamp'], pytz.timezone('Asia/Manila'))
         for k, v in feed.items():
             setattr(log, k, v)
+        log.hash = hash
         log.save()
         return log
 
