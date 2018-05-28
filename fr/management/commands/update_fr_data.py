@@ -57,13 +57,16 @@ class Command(BaseCommand):
             ctr = 0
 
             for _ in data_list:
-                hash = FrLog.hash_feed(_)
-                this_set_hash.add(hash)
-                if hash in found_hashes:
-                    continue
-                fr_log, created = FrLog.create_from_feed(hash, _)
-                if created:
-                    ctr += 1
+                try:
+                    hash = FrLog.hash_feed(_)
+                    this_set_hash.add(hash)
+                    if hash in found_hashes:
+                        continue
+                    fr_log, created = FrLog.create_from_feed(hash, _)
+                    if created:
+                        ctr += 1
+                except:
+                    pass
 
             found_hashes = this_set_hash
 
