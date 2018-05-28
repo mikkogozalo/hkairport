@@ -49,7 +49,7 @@ class Command(BaseCommand):
             for _ in to_delete:
                 del data[_]
 
-            data_list = list(data.values())[:5]
+            data_list = list(data.values())
             data_list = [dict(zip(fields, _)) for _ in data_list]
 
             this_set_hash = set()
