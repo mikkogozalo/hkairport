@@ -37,11 +37,10 @@ class FrLog(models.Model):
     @classmethod
     def create_from_feed(cls, hash, feed):
         feed = feed.copy()
-        log = cls.objects.filter(hash=hash).first()
-        if log:
-            return log, False
+        last_log = cls.objects.filter(registration=feed['registration']).order_by('-timestamp').first()
+        if last_log and last_log.hash == hash:
+            return last_log, False
 
-        last_log: FrLog = cls.objects.filter(registration=feed['registration']).order_by('-timestamp').first()
         feed['timestamp'] = datetime.fromtimestamp(feed['timestamp'], pytz.timezone('Asia/Manila'))
         if last_log:
             if (
