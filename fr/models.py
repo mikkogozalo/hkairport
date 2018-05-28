@@ -46,8 +46,8 @@ class FrLog(models.Model):
         if last_log:
             if (
                 (feed['timestamp'] - last_log.timestamp).total_seconds() <= 30 and
-                abs(last_log.vertical_speed) == 0 and abs(feed['vertical_speed'] == 0) and  # Cruising
-                feed['altitude'] > 1000  # Above 500ft
+                abs(last_log.vertical_speed) == 100 and abs(feed['vertical_speed']) == 0 and  # Cruising
+                feed['altitude'] > 1000  # Above 1000ft
             ):
                 return last_log, False
 
