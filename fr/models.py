@@ -8,6 +8,7 @@ from django.db import models
 class FrLog(models.Model):
     class Meta:
         db_table = 'fr_log'
+        indexes = [models.Index(fields=['registration', 'timestamp'])]
 
     flight = models.CharField(max_length=16, blank=True, null=True, db_index=True)
     registration = models.CharField(max_length=64, blank=True, null=True, db_index=True)
