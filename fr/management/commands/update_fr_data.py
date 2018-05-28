@@ -62,8 +62,9 @@ class Command(BaseCommand):
                     this_set_hash.add(hash)
                     if hash in found_hashes:
                         continue
-                    FrLog.create_from_feed(hash, _)
-                    ctr += 1
+                    fr_log, created = FrLog.create_from_feed(hash, _)
+                    if created:
+                        ctr += 1
                 except:
                     pass
 
@@ -71,5 +72,5 @@ class Command(BaseCommand):
 
             end = time.time()
             print('Finished cycle with {} new logs in {}s'.format(ctr, end - start))
-            time.sleep(10 - ((end - start) % 10))
+            time.sleep(5 - ((end - start) % 5))
 
