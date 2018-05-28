@@ -29,7 +29,7 @@ class Command(BaseCommand):
                     date = d['date']
                     for flight in d['list']:
                         try:
-                            cls.create_or_update_from_json(date, flight, is_cargo=cargo == 'true')
+                            cls.create_or_update_from_json(date, flight, is_cargo=cargo == 'true', print_it=True)
                         except:
                             pass
             end = time.time()

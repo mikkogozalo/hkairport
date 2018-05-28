@@ -1,3 +1,4 @@
+import time
 from dateutil.parser import parse
 from datetime import timedelta
 
@@ -17,9 +18,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        _date = parse('2018-04-20').astimezone(pytz.timezone('Asia/Manila'))
+        _date = parse('2018-04-08').astimezone(pytz.timezone('Asia/Manila'))
 
         while _date.date() != timezone.now().astimezone(pytz.timezone('Asia/Manila')).date():
+            start = time.time()
             url = 'https://www.hongkongairport.com/flightinfo-rest/rest/flights?span=1&date={}&lang=en&cargo={}&arrival={}'
             perms = product(['true', 'false'], ['true', 'false'])
             date = _date.strftime('%Y-%m-%d')
@@ -36,3 +38,5 @@ class Command(BaseCommand):
                             cls.create_or_update_from_json(date, flight, is_cargo=cargo == 'true')
                         except:
                             pass
+            end = time.time()
+            print('Finished {} in {}s'.format(date, end - start))

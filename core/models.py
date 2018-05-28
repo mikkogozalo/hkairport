@@ -449,7 +449,7 @@ class Departure(models.Model):
     is_cargo = models.BooleanField(default=False)
 
     @classmethod
-    def create_or_update_from_json(cls, date, json, is_cargo=False):
+    def create_or_update_from_json(cls, date, json, is_cargo=False, print_it=False):
         created = False
         departure_flight_number = DepartureFlightNumber.objects.filter(
             departure__schedule__date=date,
@@ -503,7 +503,8 @@ class Departure(models.Model):
                 d.save()
                 departure.latest_status = d
                 departure.save()
-                print(d)
+                if print_it:
+                    print(d)
 
         return departure
 
@@ -568,7 +569,7 @@ class Arrival(models.Model):
     is_cargo = models.BooleanField(default=False)
 
     @classmethod
-    def create_or_update_from_json(cls, date, json, is_cargo=False):
+    def create_or_update_from_json(cls, date, json, is_cargo=False, print_it=False):
         created = False
         arrival_flight_number = ArrivalFlightNumber.objects.filter(
             arrival__schedule__date=date,
@@ -622,7 +623,8 @@ class Arrival(models.Model):
                 d.save()
                 arrival.latest_status = d
                 arrival.save()
-                print(d)
+                if print_it:
+                    print(d)
         return arrival
 
     def __str__(self):
@@ -665,3 +667,4 @@ class ArrivalStatus(models.Model):
 def status_update_callback(status):
     if status.status_code in ['LA', '']:
         pass
+
