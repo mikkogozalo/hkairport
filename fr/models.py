@@ -1,6 +1,6 @@
 import pytz
 import hashlib
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.db import models
 
@@ -39,14 +39,20 @@ class FrLog(models.Model):
         feed = feed.copy()
         log = cls.objects.filter(hash=hash).first()
         if log:
-            return log
-        log = FrLog()
+            return log, False
+
+        last_log = cls.objects.filter(registration=feed['registration']).order_by('-timestamp').first()
         feed['timestamp'] = datetime.fromtimestamp(feed['timestamp'], pytz.timezone('Asia/Manila'))
+        if last_log:
+            if (feed['timestamp'] - last_log.timestamp).total_seconds() <= 30 and feed['altitude'] > 24000:
+                return last_log, False
+
+        log = FrLog()
         for k, v in feed.items():
             setattr(log, k, v)
         log.hash = hash
         log.save()
-        return log
+        return log, True
 
     @classmethod
     def hash_feed(cls, feed):
