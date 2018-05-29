@@ -22,7 +22,13 @@ class Command(BaseCommand):
             perms = product(['true', 'false'], ['true', 'false'])
             for cargo, arrival in perms:
                 date = (timezone.now().astimezone(pytz.timezone('Asia/Manila')) - timedelta(days=1)).strftime('%Y-%m-%d')
-                data = requests.get(url.format(date, cargo, arrival)).json()
+                while True:
+                    data = requests.get(url.format(date, cargo, arrival))
+                    if data.status_code == 200:
+                        data = data.json()
+                        break
+                    time.sleep(1)
+
                 cls = Arrival if arrival == 'true' else Departure
 
                 for d in data:
