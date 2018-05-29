@@ -37,6 +37,11 @@ class FrLog(models.Model):
 
     @classmethod
     def create_from_feed(cls, hash, feed):
+        if not any(
+                feed['destination'] == _ or feed['origin'] == _
+                for _ in ['HKG', 'MNL', 'MFM', 'CEB', 'DVO', 'GES', 'ILO', 'KLO', 'USU', 'ENI']
+        ):
+            return None, False
         feed = feed.copy()
         last_log = cls.objects.filter(registration=feed['registration']).order_by('-timestamp').first()
         if last_log and last_log.hash == hash:
