@@ -45,8 +45,8 @@ class FrLog(models.Model):
         feed['timestamp'] = datetime.fromtimestamp(feed['timestamp'], pytz.timezone('Asia/Manila'))
         if last_log:
             if (
-                (feed['timestamp'] - last_log.timestamp).total_seconds() <= 120 and
-                abs(last_log.vertical_speed) < 100 and abs(feed['vertical_speed']) < 100 and  # Cruising
+                (feed['timestamp'] - last_log.timestamp).total_seconds() <= 300 and
+                abs(last_log.vertical_speed - feed['vertical_speed']) < 100 and  # Cruising
                 feed['altitude'] > 1000  # Above 1000ft
             ):
                 return last_log, False

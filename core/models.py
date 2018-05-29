@@ -94,7 +94,6 @@ class Airline(NamedModel, ChineseNamedModel):
     icao = models.CharField(max_length=3, unique=True, db_index=True)
     iata = models.CharField(max_length=2, db_index=True, blank=True, null=True)
 
-
     terminal = models.ForeignKey('Terminal', on_delete=models.CASCADE, blank=True, null=True)
     ground_handling = models.ForeignKey('GroundHandling', on_delete=models.CASCADE, blank=True, null=True)
 
@@ -361,8 +360,8 @@ class FlightNumber(models.Model):
         db_table = 'flight_number'
 
     airline = models.ForeignKey('Airline', on_delete=models.CASCADE)
-    airline_letters = models.CharField(max_length=2)
-    number = models.CharField(max_length=5)
+    airline_letters = models.CharField(max_length=2, db_index=True)
+    number = models.CharField(max_length=5, db_index=True)
     number_ordering = models.IntegerField()
     departures = models.ManyToManyField('Departure', through='DepartureFlightNumber')
     arrivals = models.ManyToManyField('Arrival', through='ArrivalFlightNumber')
@@ -443,7 +442,7 @@ class Departure(models.Model):
     terminal = models.ForeignKey('Terminal', related_name='departures', on_delete=models.CASCADE, blank=True, null=True)
     aisles = models.ManyToManyField('Aisle', through='DepartureAisle')
     gate = models.ForeignKey('Gate', blank=True, null=True, on_delete=models.CASCADE)
-    schedule = models.DateTimeField()
+    schedule = models.DateTimeField(db_index=True)
     actual = models.DateTimeField(blank=True, null=True)
     latest_status = models.ForeignKey('DepartureStatus', related_name='latest', on_delete=models.CASCADE, blank=True, null=True)
     is_cargo = models.BooleanField(default=False)
@@ -563,7 +562,7 @@ class Arrival(models.Model):
     stand = models.ForeignKey('Stand', related_name='arrivals', blank=True, null=True, on_delete=models.CASCADE)
     baggage_reclaim = models.ForeignKey('BaggageReclaim', related_name='arrivals', on_delete=models.CASCADE, blank=True, null=True)
     hall = models.ForeignKey('Hall', blank=True, null=True, on_delete=models.CASCADE)
-    schedule = models.DateTimeField()
+    schedule = models.DateTimeField(db_index=True)
     actual = models.DateTimeField(blank=True, null=True)
     latest_status = models.ForeignKey('ArrivalStatus', related_name='latest', on_delete=models.CASCADE, blank=True, null=True)
     is_cargo = models.BooleanField(default=False)
